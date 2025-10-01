@@ -1,3 +1,5 @@
+
+
 # Jarkom-Modul-1-2025-K-14
 
 | Nama                         | Nrp        |
@@ -128,3 +130,57 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt-get install -y iptables-persistent
 echo "--> Konfigurasi permanen selesai."
+
+## Soal 6: Packet Sniffing dengan Wireshark
+
+### Tujuan
+Latihan menangkap dan memfilter trafik jaringan antara Manwe dan Eru.
+
+### Langkah-langkah Pengerjaan
+1.  Di GNS3, mulai *capture* pada koneksi antara Eru dan Switch1.
+2.  Dari **Manwe**, hasilkan trafik dengan `ping -c 5 192.18.1.1`.
+3.  Di Wireshark, gunakan filter `ip.addr == 192.18.1.3`.
+
+### Skrip yang Digunakan
+Tidak ada skrip utama, pengerjaan berfokus pada GNS3 dan Wireshark.
+
+### Bukti Pengerjaan (Screenshot)
+* **[➡️ Ambil Screenshot di sini]** Tampilan jendela Wireshark yang sudah difilter.
+    * *Saran penamaan file: `images/soal6_wireshark_filter.png`*
+
+---
+
+## Soal 7: Konfigurasi FTP Server
+
+### Tujuan
+Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
+
+### Langkah-langkah Pengerjaan
+1.  Jalankan skrip `soal_7.sh` di **Eru**.
+2.  Dari node lain (misal **Manwe**), tes login FTP ke Eru sebagai `ainur` (harus berhasil) dan `melkor` (harus gagal).
+
+### Skrip yang Digunakan
+**`soal_7.sh` (di Node Eru)**
+```bash
+#!/bin/bash
+apt-get update > /dev/null 2>&1 && apt-get install -y vsftpd
+useradd -m -s /bin/bash ainur && echo "ainur:ftpaman" | chpasswd
+useradd -m -s /bin/bash melkor && echo "melkor:ftpgagal" | chpasswd
+cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
+cat > /etc/vsftpd.conf << EOF
+listen=YES
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+userlist_enable=YES
+userlist_file=/etc/vsftpd.userlist
+userlist_deny=NO
+EOF
+echo "ainur" > /etc/vsftpd.userlist
+service vsftpd restart
+echo "FTP Server Siap."
+
+
+
+
