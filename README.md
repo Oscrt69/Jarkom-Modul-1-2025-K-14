@@ -131,6 +131,8 @@ echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-
 apt-get install -y iptables-persistent
 echo "--> Konfigurasi permanen selesai."
 
+
+
 ## Soal 6: Packet Sniffing dengan Wireshark
 
 ### Tujuan
