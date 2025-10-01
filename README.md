@@ -133,7 +133,7 @@ echo "--> Konfigurasi permanen selesai."
 
 
 
-## Soal 6: Packet Sniffing dengan Wireshark
+   ## Soal 6: Packet Sniffing dengan Wireshark
 
 ### Tujuan
 Latihan menangkap dan memfilter trafik jaringan antara Manwe dan Eru.
@@ -152,7 +152,7 @@ Tidak ada skrip utama, pengerjaan berfokus pada GNS3 dan Wireshark.
 
 ---
 
-## Soal 7: Konfigurasi FTP Server
+   ## Soal 7: Konfigurasi FTP Server
 
 ### Tujuan
 Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
