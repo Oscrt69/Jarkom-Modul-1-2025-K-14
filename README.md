@@ -163,26 +163,215 @@ Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
 2.  Dari node lain (misal **Manwe**), tes login FTP ke Eru sebagai `ainur` (harus berhasil) dan `melkor` (harus gagal).
 
 ### Skrip yang Digunakan
+
 **`soal_7.sh` (di Node Eru)**
-```bash
+
+   ```bash
+   #!/bin/bash
+   apt-get update > /dev/null 2>&1 && apt-get install -y vsftpd
+   useradd -m -s /bin/bash ainur && echo "ainur:ftpaman" | chpasswd
+   useradd -m -s /bin/bash melkor && echo "melkor:ftpgagal" | chpasswd
+   cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
+   cat > /etc/vsftpd.conf << EOF
+   listen=YES
+   anonymous_enable=NO
+   local_enable=YES
+   write_enable=YES
+   chroot_local_user=YES
+   userlist_enable=YES
+   userlist_file=/etc/vsftpd.userlist
+   userlist_deny=NO
+   EOF
+   echo "ainur" > /etc/vsftpd.userlist
+   service vsftpd restart
+   echo "FTP Server Siap."
+
+### Soal 8: Analisis Upload FTP
+## Tujuan
+Menganalisis proses upload file ke FTP dan mengidentifikasi perintah STOR di Wireshark.
+
+## Langkah-langkah Pengerjaan
+Jalankan skrip soal_8.sh di Ulmo.
+
+Mulai capture di GNS3 pada koneksi Eru-Switch2.
+
+Dari Ulmo, jalankan ftp 192.18.2.1, login sebagai ainur, lalu put ramalan.txt.
+
+Hentikan capture dan cari paket STOR di Wireshark.
+
+## Skrip yang Digunakan
+
+soal_8.sh (di Node Ulmo)
+
+Bash
+
+   #!/bin/bash
+   echo "=== Persiapan Ulmo (Soal 8) ==="
+   apt-get update > /dev/null 2>&1 && apt-get install -y ftp
+   echo "data cuaca untuk Eru" > /root/ramalan.txt
+   echo "--> Siap untuk upload. Jalankan 'ftp 192.18.2.1'"
+
+
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Screenshot Wireshark yang menyorot paket Request: STOR ramalan.txt.
+
+Saran penamaan file: images/soal8_wireshark_stor.png
+
+Soal 9: Analisis Download FTP & Read-Only
+Tujuan
+Mengubah hak akses menjadi read-only dan menganalisis proses download (RETR).
+
+Langkah-langkah Pengerjaan
+Jalankan skrip soal_9.sh di Eru.
+
+Mulai capture pada koneksi Manwe-Eru.
+
+Dari Manwe, jalankan ftp 192.18.1.1, login sebagai ainur, lalu get kitab.txt. Coba juga put file.txt untuk membuktikan kegagalannya.
+
+Hentikan capture dan cari paket RETR di Wireshark.
+
+Skrip yang Digunakan
+soal_9.sh (di Node Eru)
+
+Bash
+
 #!/bin/bash
-apt-get update > /dev/null 2>&1 && apt-get install -y vsftpd
-useradd -m -s /bin/bash ainur && echo "ainur:ftpaman" | chpasswd
-useradd -m -s /bin/bash melkor && echo "melkor:ftpgagal" | chpasswd
-cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
-cat > /etc/vsftpd.conf << EOF
-listen=YES
-anonymous_enable=NO
-local_enable=YES
-write_enable=YES
-chroot_local_user=YES
-userlist_enable=YES
-userlist_file=/etc/vsftpd.userlist
-userlist_deny=NO
-EOF
-echo "ainur" > /etc/vsftpd.userlist
+echo "=== Konfigurasi Read-Only FTP (Soal 9) ==="
+sed -i 's/write_enable=YES/write_enable=NO/' /etc/vsftpd.conf
 service vsftpd restart
-echo "FTP Server Siap."
+echo "isi kitab" > /home/ainur/kitab.txt
+echo "--> Konfigurasi read-only aktif."
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Screenshot terminal Manwe yang menunjukkan get berhasil dan put gagal.
+
+[➡️ Ambil Screenshot di sini] Screenshot Wireshark yang menyorot paket Request: RETR kitab.txt.
+
+Saran penamaan file: images/soal9_test_akses.png, images/soal9_wireshark_retr.png
+
+Soal 10: Simulasi Serangan Ping Flood
+Tujuan
+Mengirim 100 paket ping dari Melkor ke Eru dan menganalisis hasilnya.
+
+Langkah-langkah Pengerjaan
+Jalankan skrip soal_10.sh di node Melkor.
+
+Tunggu hingga selesai dan amati blok statistik di akhir output.
+
+Skrip yang Digunakan
+soal_10.sh (di Node Melkor)
+
+Bash
+
+#!/bin/bash
+echo "=== Memulai Ping Flood (Soal 10) ==="
+ping -c 100 192.18.1.1
+echo "=== Ping Flood Selesai ==="
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Screenshot blok statistik di akhir output ping.
+
+Saran penamaan file: images/soal10_ping_statistik.png
+
+Soal 11: Membuktikan Kelemahan Telnet
+Tujuan
+Mendemonstrasikan bahwa Telnet tidak aman dengan menangkap kredensial login.
+
+Langkah-langkah Pengerjaan
+Jalankan skrip soal_11.sh di Melkor.
+
+Mulai capture pada koneksi Eru-Melkor.
+
+Dari Eru, jalankan telnet 192.18.1.2 dan login.
+
+Analisis di Wireshark menggunakan "Follow TCP Stream".
+
+Skrip yang Digunakan
+soal_11.sh (di Node Melkor)
+
+Bash
+
+#!/bin/bash
+echo "=== Persiapan Server Telnet (Soal 11) ==="
+apt-get update > /dev/null 2>&1 && apt-get install -y inetutils-inetd telnetd
+sed -i 's/^#<off># telnet.*/telnet\tstream\ttcp\tnowait\troot\t/usr/sbin/tcpd\t/usr/sbin/telnetd/' /etc/inetd.conf
+USERNAME="eru_login"
+if id "$USERNAME" &>/dev/null; then userdel -r "$USERNAME"; fi
+useradd -m -d /home/$USERNAME -s /bin/bash "$USERNAME"
+echo "eru_login:password_terlihat_jelas" | chpasswd
+killall inetutils-inetd > /dev/null 2>&1
+# Menggunakan nama biner yang benar yang kita temukan saat troubleshooting
+/usr/sbin/inetutils-inetd
+echo "--> Server Telnet Siap."
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Screenshot jendela "Follow TCP Stream" di Wireshark yang menunjukkan username dan password.
+
+Saran penamaan file: images/soal11_telnet_plaintext.png
+
+Soal 12: Pemindaian Port dengan Netcat
+Tujuan
+Latihan memindai port dengan nc untuk memeriksa status port 21, 80 (terbuka) dan 666 (tertutup).
+
+Langkah-langkah Pengerjaan
+Jalankan skrip soal_12.sh di Melkor.
+
+Dari Eru, jalankan tiga perintah nc -zv 192.18.1.2 <port> untuk setiap port (21, 80, 666).
+
+Skrip yang Digunakan
+soal_12.sh (di Node Melkor)
+
+Bash
+
+#!/bin/bash
+echo "=== Menjalankan Listener Netcat (Soal 12) ==="
+killall nc > /dev/null 2>&1
+apt-get update > /dev/null 2>&1 && apt-get install -y netcat-traditional
+nc -l -p 21 &
+nc -l -p 80 &
+echo "--> Listener di port 21 dan 80 aktif."
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Screenshot terminal Eru yang menunjukkan hasil dari ketiga perintah scan nc.
+
+Saran penamaan file: images/soal12_hasil_scan.png
+
+Soal 13: Mendemonstrasikan Keamanan SSH
+Tujuan
+Menunjukkan bahwa SSH aman dengan menganalisis sesi login yang terenkripsi.
+
+Langkah-langkah Pengerjaan
+Jalankan skrip soal_13_server.sh di Eru, lalu atur password root dengan passwd.
+
+Jalankan skrip soal_13_client.sh di Varda.
+
+Mulai capture pada koneksi Varda-Eru.
+
+Dari Varda, jalankan ssh root@192.18.2.1 dan login.
+
+Analisis paket SSH di Wireshark untuk menunjukkan data terenkripsi.
+
+Skrip yang Digunakan
+soal_13_server.sh (di Node Eru)
+
+Bash
+
+#!/bin/bash
+echo "=== Konfigurasi Server SSH di Eru (Soal 13) ==="
+apt-get update > /dev/null 2>&1 && apt-get install -y openssh-server
+sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+service ssh restart
+echo "--> Server SSH Siap. Jalankan 'passwd' untuk set password root."
+soal_13_client.sh (di Node Varda)
+
+Bash
+
+#!/bin/bash
+echo "=== Konfigurasi Client SSH di Varda (Soal 13) ==="
+apt-get update > /dev/null 2>&1 && apt-get install -y openssh-client
+# IP Address sudah diatur oleh langkah-langkah manual di soal 3
+echo "--> Client SSH Siap."
+Bukti Pengerjaan (Screenshot)
+[➡️ Ambil Screenshot di sini] Jendela Wireshark yang menampilkan detail paket SSH dan menunjukkan bagian "Encrypted Data".
+
+Saran penamaan file: images/soal13_ssh_encrypted.png
+
 
 
 
