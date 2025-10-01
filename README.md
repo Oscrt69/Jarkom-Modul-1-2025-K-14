@@ -120,16 +120,18 @@ Menyimpan semua konfigurasi jaringan agar tidak hilang saat node di-restart.
 2.  **Konfigurasi IP Forwarding & NAT Permanen di Eru:** Jalankan skrip `soal_5_permanen.sh` di node **Eru**.
 
 ### Skrip yang Digunakan
-**`soal_5_permanen.sh` (di Node Eru)**
-            ```bash
-            #!/bin/bash
-            echo "=== Membuat Konfigurasi Permanen di Eru (Soal 5) ==="
-            sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
-            sysctl -p
-            echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
-            echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
-            apt-get install -y iptables-persistent
-            echo "--> Konfigurasi permanen selesai."
+
+**`soal_5_permanen.sh` (di Node Eru)**\
+
+    ```bash
+    #!/bin/bash
+     echo "=== Membuat Konfigurasi Permanen di Eru (Soal 5) ==="
+     sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+    sysctl -p
+    echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+    echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+    apt-get install -y iptables-persistent
+    echo "--> Konfigurasi permanen selesai."
    
 
 ## Soal 6: Packet Sniffing dengan Wireshark
