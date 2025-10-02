@@ -372,6 +372,15 @@ Bukti Pengerjaan (Screenshot)
 
 Saran penamaan file: images/soal13_ssh_encrypted.png
 
+### Soal 14
+
+
+
+### Soal 15
+
+### Soal 16
+
+### Soal 19
 
 
 
