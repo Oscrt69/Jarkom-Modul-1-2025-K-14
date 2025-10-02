@@ -376,13 +376,63 @@ Saran penamaan file: images/soal13_ssh_encrypted.png
 
 ### Soal 14
 
+Command di bash untuk menyelesaikan soal.
 
+'''
+nc 10.15.43.32 3401
+'''
+
+Setelah itu akan muncul Sub-soal yang jawabannya dapat ditemukan di wireshark.
+
+### Sub-Soal 1
+
+How many packets are recorded in the pcapng file?
+
+### Jawaban
+
+500358
+
+### Sub-Soal 2
+
+What are the user that successfully logged in? Format: user:pass
+
+### Jawaban
+
+n1enna:y4v4nn4_k3m3nt4r1
+
+### Sub-Soal 3
+
+In which stream were the credentials found? Format: int
+
+### Jawaban
+
+41824
+
+Jawaban dari ketiga Sub-soal bisa dilihat dengan mengikuti prosedur berikut:
+
+Buka file > right click > follow
+
+TARO SS DI SINI
+
+### Flag
 
 ### Soal 15
 
+### Sub-soal
+
+### Flag
+
 ### Soal 16
 
+### Sub-soal
+
+### Flag
+
 ### Soal 19
+
+### Sub-soal
+
+### Flag
 
 
 
