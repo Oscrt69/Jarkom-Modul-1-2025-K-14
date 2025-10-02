@@ -377,12 +377,9 @@ Saran penamaan file: images/soal13_ssh_encrypted.png
 ### Soal 14
 
 Command di bash untuk menyelesaikan soal.
-
-'''
+```
 nc 10.15.43.32 3401
-'''
-
-Setelah itu akan muncul Sub-soal yang jawabannya dapat ditemukan di wireshark.
+```
 
 ### Sub-Soal 1
 
@@ -395,6 +392,10 @@ How many packets are recorded in the pcapng file?
 ### Sub-Soal 2
 
 What are the user that successfully logged in? Format: user:pass
+
+
+<img width="800" height="1200" alt="ws142" src="https://github.com/user-attachments/assets/01cf855e-3864-49bc-9a49-a78522f3e50d" />
+
 
 ### Jawaban
 
@@ -414,19 +415,21 @@ What tools are used for brute force? Format: Hydra v1.8.0-dev
 
 ### Jawaban
 
-41824
+``` Fuzz Faster U Fool v2.1.0-dev ```
 
 Jawaban dari keempat Sub-soal bisa dilihat dengan mengikuti prosedur berikut:
 
 Buka file > right click > follow
 
-<img width="800" height="1200" alt="ws146" src="https://github.com/user-attachments/assets/9153e5b4-29b4-4138-aaff-dd575f6c5d3f" />
-
 ### Flag
+
+<img width="800" height="1200" alt="ws146" src="https://github.com/user-attachments/assets/bdbcb609-3806-47e1-bb88-63a9f7eb8ce3" />
+
+``` KOMJAR25{Brut3_F0rc3_kEo19FVGnWOwcUk1mvLDKAmCa}  ```
 
 ### Soal 15
 
-### Sub-soal
+### Sub-soal 1
 
 ### Flag
 
