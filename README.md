@@ -408,11 +408,19 @@ In which stream were the credentials found? Format: int
 
 41824
 
-Jawaban dari ketiga Sub-soal bisa dilihat dengan mengikuti prosedur berikut:
+### Sub-Soal 4
+
+What tools are used for brute force? Format: Hydra v1.8.0-dev
+
+### Jawaban
+
+41824
+
+Jawaban dari keempat Sub-soal bisa dilihat dengan mengikuti prosedur berikut:
 
 Buka file > right click > follow
 
-TARO SS DI SINI
+<img width="800" height="1200" alt="ws146" src="https://github.com/user-attachments/assets/9153e5b4-29b4-4138-aaff-dd575f6c5d3f" />
 
 ### Flag
 
