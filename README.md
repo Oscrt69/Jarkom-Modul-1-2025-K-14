@@ -185,6 +185,7 @@ Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
    echo "ainur" > /etc/vsftpd.userlist
    service vsftpd restart
    echo "FTP Server Siap."
+```
 
 ### Soal 8: Analisis Upload FTP
 ## Tujuan
@@ -371,6 +372,7 @@ Bukti Pengerjaan (Screenshot)
 [➡️ Ambil Screenshot di sini] Jendela Wireshark yang menampilkan detail paket SSH dan menunjukkan bagian "Encrypted Data".
 
 Saran penamaan file: images/soal13_ssh_encrypted.png
+
 
 ### Soal 14
 
