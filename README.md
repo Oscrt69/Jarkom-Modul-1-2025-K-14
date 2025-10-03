@@ -675,10 +675,45 @@ Who sent the threatening message? Format: string (name)
 
 1. Follow > TCP Stream
 
+<img width="1388" height="375" alt="ws191 - Copy" src="https://github.com/user-attachments/assets/743466f6-686c-413a-be54-0dc0ae6046c4" />
 
+Jawaban
+
+``` 
+Your Life
+```
+
+## Sub-soal 2
+
+How much ransom did the attacker demand ($)? Format: int
+
+1. Follow > TCP Stream
+
+<img width="1824" height="227" alt="ws191" src="https://github.com/user-attachments/assets/86ef70c9-e98e-42ed-b704-45d14683bd6e" />
+
+Jawaban
+
+``` 
+1600
+```
+
+### Sub-soal3
+
+What is the hash of the second suspicious file (knr.exe)? Format: sha256
+
+<img width="1832" height="587" alt="ws192" src="https://github.com/user-attachments/assets/9884281a-af13-462a-b2ec-b11a28c780b7" />
+
+Jawaban
+
+```
+1CWHmuF8dHt7HBGx5RKKLgg9QA2GmE3UyL
+```
 
 ### Flag
 
-
+```
+KOMJAR25{Y0u_4re_J4rk0m_G0d_uYgq9qyc7cdrJ2F5gyBt0otqK}
+```
+x<img width="1486" height="884" alt="ws193" src="https://github.com/user-attachments/assets/c1ecd241-f075-41bd-a180-83c88975d9b5" />
 
 
