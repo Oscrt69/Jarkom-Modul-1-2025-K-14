@@ -387,7 +387,7 @@ How many packets are recorded in the pcapng file?
 
 ### Jawaban
 
-500358
+```500358```
 
 ### Sub-Soal 2
 
@@ -399,7 +399,7 @@ What are the user that successfully logged in? Format: user:pass
 
 ### Jawaban
 
-n1enna:y4v4nn4_k3m3nt4r1
+```n1enna:y4v4nn4_k3m3nt4r1```
 
 ### Sub-Soal 3
 
@@ -429,9 +429,116 @@ Buka file > right click > follow
 
 ### Soal 15
 
+``` nc 10.15.43.32 3402 ```
+
 ### Sub-soal 1
 
+What device does Melkor use?
+
+### Jawaban
+
+``` Keyboard ```
+
+<img width="800" height="1200" alt="ws152" src="https://github.com/user-attachments/assets/4d9ecdde-cdac-4d27-92a9-71db3737072b" />
+
+### Sub-soal 2
+
+What did Melkor write?
+
+Gunakan filter ```(Frame.len==35)``` > Hilangkan semua kolom kecuali HID ID > File > Export Packet Dissections > as csv
+
+buat script .py (decode_hid.py) untuk encode, dan jadikan file .csv (dataws.csv) satu folder dengan script .py.
+
+Ini adalah isi decode_hid.py:
+
+```
+hid_map = {
+    0x04: "a", 0x05: "b", 0x06: "c", 0x07: "d",
+    0x08: "e", 0x09: "f", 0x0A: "g", 0x0B: "h",
+    0x0C: "i", 0x0D: "j", 0x0E: "k", 0x0F: "l",
+    0x10: "m", 0x11: "n", 0x12: "o", 0x13: "p",
+    0x14: "q", 0x15: "r", 0x16: "s", 0x17: "t",
+    0x18: "u", 0x19: "v", 0x1A: "w", 0x1B: "x",
+    0x1C: "y", 0x1D: "z",
+    0x1E: "1", 0x1F: "2", 0x20: "3", 0x21: "4",
+    0x22: "5", 0x23: "6", 0x24: "7", 0x25: "8",
+    0x26: "9", 0x27: "0",
+    0x2C: " ",   
+    0x28: "\n", 
+    0x2E: "="
+}
+
+shift_map = {
+    0x1E: "!", 0x1F: "@", 0x20: "#", 0x21: "$",
+    0x22: "%", 0x23: "^", 0x24: "&", 0x25: "*",
+    0x26: "(", 0x27: ")",
+    0x04: "A", 0x05: "B", 0x06: "C", 0x07: "D",
+    0x08: "E", 0x09: "F", 0x0A: "G", 0x0B: "H",
+    0x0C: "I", 0x0D: "J", 0x0E: "K", 0x0F: "L",
+    0x10: "M", 0x11: "N", 0x12: "O", 0x13: "P",
+    0x14: "Q", 0x15: "R", 0x16: "S", 0x17: "T",
+    0x18: "U", 0x19: "V", 0x1A: "W", 0x1B: "X",
+    0x1C: "Y", 0x1D: "Z"
+}
+
+def decode_key(modifier, keycode):
+    is_shift = (modifier & 0x22) != 0  
+    if is_shift and keycode in shift_map:
+        return shift_map[keycode]
+    elif keycode in hid_map:
+        return hid_map[keycode]
+    else:
+        return ""
+
+def decode_line(hexline):
+    hexline = hexline.strip().strip('"')
+    bytestr = [hexline[i:i+2] for i in range(0, len(hexline), 2)]
+    if len(bytestr) > 2:
+        modifier = int(bytestr[0], 16)   
+        keycode  = int(bytestr[2], 16)
+        return decode_key(modifier, keycode)
+    return ""
+
+
+def main():
+    infile = "/mnt/c/tugas/JARKOM/dataws.csv"  
+    output = ""
+    with open(infile, "r") as f:
+        for line in f:
+            line = line.strip().strip('"')
+            # Skip header atau baris kosong
+            if not line or not all(c in "0123456789abcdefABCDEF" for c in line.replace('"','')):
+                continue
+            output += decode_line(line)
+    print("Decoded output:")
+    print(output)
+
+if __name__ == "__main__":
+    main()
+
+```
+gunakan command untuk decode:
+
+``` python3 decode_hid.py ```
+
+<img width="946" height="274" alt="ws156" src="https://github.com/user-attachments/assets/9746c077-1128-442f-af09-f4f1e889e2c1" />
+
+### Jawaban 
+``` UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ= ```
+
+### Sub-soal 3
+
+What did Melkor write?
+
+Gunakan command ``` echo "UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ=" | base64 --decode ```
+
+```Plz_pr0v1de_y0ur_us3rn4me_4nd_p4ssw0rd```
+
 ### Flag
+
+```KOMJAR25{K3yb0ard_W4rr10r_BRxsRQ8etjElDYMOJBbksIR0d}```
+
+<img width="1505" height="770" alt="w151" src="https://github.com/user-attachments/assets/de78ed5c-6f86-4997-a06d-1c18959624a6" />
 
 ### Soal 16
 
