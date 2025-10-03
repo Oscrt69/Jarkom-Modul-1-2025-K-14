@@ -1,5 +1,4 @@
 
-
 # Jarkom-Modul-1-2025-K-14
 
 | Nama                         | Nrp        |
@@ -553,13 +552,130 @@ Gunakan command ``` echo "UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ=" 
 
 ### Soal 16
 
-### Sub-soal
+```
+nc 10.15.43.32 3403
+```
+### Sub-soal 1
+
+What credential did the attacker use to log in? Format: user:pass
+
+1. Gunakan filter ```tcp.stream eq 1```
+
+<img width="600" height="400" alt="ws161" src="https://github.com/user-attachments/assets/67baf020-582c-42cd-bfc3-5816abaeba2c" />
+
+2. Right Click > Follow > TCP Stream
+
+<img width="1200" height="800" alt="ws162" src="https://github.com/user-attachments/assets/f5969a10-e264-45b8-ad3f-6cf89f893253" />
+
+Jawaban 
+
+```
+ind@psg420.com:{6r_6e#TfT1p
+```
+### Sub-soal 2
+
+How many files are suspected of containing malware? Format: int
+
+1. Ditemukan bahwa terdapat 5 jenis file `.exe` yang berbeda diantaranya:
+> q.exe <br>
+> w.exe <br>
+> e.exe <br>
+> r.exe <br>
+> t.exe <BR>
+
+Jawaban
+
+```
+5 
+```
+### Sub-soal 3
+
+What is the hash of the first file (q.exe)? Format: sha256
+
+<img width="1200" height="676" alt="ws165" src="https://github.com/user-attachments/assets/43f64eea-c3dc-41e9-b4c4-e6540dd688ef" />
+
+Klik salah satu file q.exe > Follow > TCP Stream > Save as raw > beri nama file (encrypt1.exe)
+
+```
+sha256sum encrypt1 
+```
+
+<img width="1218" height="132" alt="ws166" src="https://github.com/user-attachments/assets/6c021e09-8b8b-47cc-8ee4-d0c03afdda76" />
+
+Jawaban
+
+``` 
+ca34b0926cdc3242bbfad1c4a0b42cc2750d90db9a272d92cfb6cb7034d2a3bd
+```
+
+### Sub-soal 4
+
+What is the hash of the second file (w.exe)? Format: sha256
+
+Lakukan langkah yang sama dengan soal sebelumya, Klik salah satu file q.exe > Follow > TCP Stream > Save as raw > beri nama file (encrypt2.exe)
+
+Jawaban 
+
+```
+08eb941447078ef2c6ad8d91bb2f52256c09657ecd3d5344023edccf7291e9fc
+ ```
+
+### Sub-soal 5
+
+What is the hash of the third file (e.exe)? Format: sha256
+
+Lakukan langkah yang sama dengan soal sebelumya, Klik salah satu file q.exe > Follow > TCP Stream > Save as raw > beri nama file (encrypt3.exe)
+
+Jawaban
+
+```
+32e1b3732cd779af1bf7730d0ec8a7a87a084319f6a0870dc7362a15ddbd3199
+```
+
+### Sub-soal 6
+
+What is the hash of the fourth file (r.exe)? Format: sha256
+
+Lakukan langkah yang sama dengan soal sebelumya, Klik salah satu file q.exe > Follow > TCP Stream > Save as raw > beri nama file (encrypt4.exe)
+
+Jawaban
+
+```
+4ebd58007ee933a0a8348aee2922904a7110b7fb6a316b1c7fb2c6677e613884
+```
+
+### Sub-soal 7
+ 
+What is the hash of the fifth file (t.exe)? Format: sha256
+
+Lakukan langkah yang sama dengan soal sebelumya, Klik salah satu file q.exe > Follow > TCP Stream > Save as raw > beri nama file (encrypt5.exe)
+
+Jawaban
+
+```
+10ce4b79180a2ddd924fdc95951d968191af2ee3b7dfc96dd6a5714dbeae613a 
+```
 
 ### Flag
 
+<img width="2880" height="1716" alt="ws164" src="https://github.com/user-attachments/assets/7f02d5e5-e941-453c-a4a0-1290b29f1e8f" />
+
+```
+KOMJAR25{Y0u_4r3_4_g00d_4nalyz3r_iDYON1mAHIfDzG2S49awKOBRm}
+```
 ### Soal 19
 
-### Sub-soal
+```
+nc 10.15.43.32 3406
+```
+
+### Sub-soal 1
+
+Who sent the threatening message? Format: string (name)
+
+1. Follow > TCP Stream
+
+
 
 ### Flag
 
