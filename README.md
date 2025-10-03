@@ -376,10 +376,7 @@ Saran penamaan file: images/soal13_ssh_encrypted.png
 
 ### Soal 14
 
-Command di bash untuk menyelesaikan soal.
-```
-nc 10.15.43.32 3401
-```
+`nc 10.15.43.32 3401`
 
 ### Sub-Soal 1
 
@@ -387,19 +384,21 @@ How many packets are recorded in the pcapng file?
 
 ### Jawaban
 
-```500358```
+```
+500358
+```
 
 ### Sub-Soal 2
 
 What are the user that successfully logged in? Format: user:pass
 
-
 <img width="800" height="1200" alt="ws142" src="https://github.com/user-attachments/assets/01cf855e-3864-49bc-9a49-a78522f3e50d" />
-
 
 ### Jawaban
 
-```n1enna:y4v4nn4_k3m3nt4r1```
+```
+n1enna:y4v4nn4_k3m3nt4r1
+```
 
 ### Sub-Soal 3
 
@@ -407,7 +406,9 @@ In which stream were the credentials found? Format: int
 
 ### Jawaban
 
+```
 41824
+```
 
 ### Sub-Soal 4
 
@@ -423,13 +424,17 @@ Buka file > right click > follow
 
 ### Flag
 
-<img width="800" height="1200" alt="ws146" src="https://github.com/user-attachments/assets/bdbcb609-3806-47e1-bb88-63a9f7eb8ce3" />
+```
+KOMJAR25{Brut3_F0rc3_kEo19FVGnWOwcUk1mvLDKAmCa}  
+```
 
-``` KOMJAR25{Brut3_F0rc3_kEo19FVGnWOwcUk1mvLDKAmCa}  ```
+<img width="800" height="1200" alt="ws146" src="https://github.com/user-attachments/assets/bdbcb609-3806-47e1-bb88-63a9f7eb8ce3" />
 
 ### Soal 15
 
-``` nc 10.15.43.32 3402 ```
+``` 
+nc 10.15.43.32 3402
+```
 
 ### Sub-soal 1
 
@@ -437,7 +442,9 @@ What device does Melkor use?
 
 ### Jawaban
 
-``` Keyboard ```
+```
+Keyboard
+```
 
 <img width="800" height="1200" alt="ws152" src="https://github.com/user-attachments/assets/4d9ecdde-cdac-4d27-92a9-71db3737072b" />
 
@@ -519,12 +526,16 @@ if __name__ == "__main__":
 ```
 gunakan command untuk decode:
 
-``` python3 decode_hid.py ```
+``` 
+python3 decode_hid.py
+```
 
 <img width="946" height="274" alt="ws156" src="https://github.com/user-attachments/assets/9746c077-1128-442f-af09-f4f1e889e2c1" />
 
 ### Jawaban 
-``` UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ= ```
+```
+UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ= 
+```
 
 ### Sub-soal 3
 
