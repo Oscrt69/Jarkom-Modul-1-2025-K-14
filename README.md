@@ -906,6 +906,128 @@ Jawaban
 ```
 KOMJAR25{Y0u_4r3_4_g00d_4nalyz3r_iDYON1mAHIfDzG2S49awKOBRm}
 ```
+
+### Soal 17
+
+```
+nc 10.15.43.32 3404
+```
+
+### Sub-soal 1
+
+What is the name of the first suspicious file? Format: file.exe
+
+1. What is the name of the first suspicious file? Format: file.exe
+
+Jawaban
+
+```
+Invoice&MSO-Request.doc
+```
+
+### Sub-soal 2
+
+What is the name of the second suspicious file? Format: file.exe
+
+Jawaban
+
+```
+knr.exe
+```
+
+### Sub-soal 3
+
+What is the hash of the second suspicious file (knr.exe)? Format: sha256
+
+1. File > Export Objects > HTTP > Save
+2. ``` sha256 knr.exe ```
+
+Jawaban
+
+```
+749e161661290e8a2d190b1a66469744127bc25bf46e5d0c6f2e835f4b92db18
+```
+
+Flag
+
+```
+KOMJAR25{M4ster_4n4lyzer_1xcg3WUUjKpux80gm8tEdFgL0}
+
+```
+
+### Soal 18
+
+```
+nc 10.15.43.32 3405
+```
+
+### Sub-soal 1
+
+How many files are suspected of containing malware? Format: int
+
+1. File > Export Objects > SMB
+
+### Jawaban
+
+```
+2
+```
+
+### Sub-soal 2
+
+What is the name of the first malicious file? Format: file.exe
+
+### Jawaban
+
+```
+d0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
+```
+
+### Sub-soal 3
+
+Apa nama file berbahaya yang kedua? Format: file.exe
+
+### Jawaban
+
+```
+d0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
+```
+
+### Sub-soal 4
+
+What is the hash of the first malicious file? Format: sha256
+
+1.
+```
+sha256sum %5cWINDOWS%5cd0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
+```
+### Jawaban
+
+```
+59896ae5f3edcb999243c7bfdc0b17eb7fe28f3a66259d797386ea470c010040
+```
+
+### Sub-soal 5
+
+What is the hash of the second malicious file? Format: sha256
+
+1. 
+```
+sha256 %5cWINDOWS%5coiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyh46l8n_di.exe
+```
+
+### Jawaban
+
+```
+cf99990bee6c378cbf56239b3cc88276eec348d82740f84e9d5c343751f82560
+```
+
+Flag
+
+```
+KOMJAR25{Y0u_4re_g0dl1ke_e8XQLgCWiRzzsqZm9XqENF6bY}
+```
+
 ### Soal 19
 
 ```
@@ -940,7 +1062,7 @@ Jawaban
 1600
 ```
 
-### Sub-soal3
+### Sub-soal 3
 
 What is the hash of the second suspicious file (knr.exe)? Format: sha256
 
@@ -958,5 +1080,69 @@ Jawaban
 KOMJAR25{Y0u_4re_J4rk0m_G0d_uYgq9qyc7cdrJ2F5gyBt0otqK}
 ```
 x<img width="1486" height="884" alt="ws193" src="https://github.com/user-attachments/assets/c1ecd241-f075-41bd-a180-83c88975d9b5" />
+
+### Soal 20
+
+```
+nc 10.15.43.32 3407
+```
+
+### Sub-soal 1
+
+What encryption method is used? Format: string
+
+1. gunakan filter ```tls.handshake.type == 2```
+
+Jawaban
+
+```
+TLS
+```
+
+### Sub-soal 2
+
+What is the name of the malicious file placed by the attacker? Format: file.exe
+
+1. gunakan filter
+
+```
+http.response.code == 200
+```
+
+Answer
+
+```
+invest_20.dll
+```
+
+### Sub-soal 3
+
+What is the hash of the file containing the malware? Format: sha256
+
+```
+sha256sum invest_20.ddl
+```
+
+Answer
+
+```
+31cf42b2a7c5c558f44cfc67684cc344c17d4946d3a1e0b2cecb8eb58173cb2f
+```
+
+Flag
+
+```
+KOMJAR25{B3ware_0f_M4lw4re_Q1lBjLY0oJ3rCllqfcUS8GO4a}
+```
+
+
+
+
+
+
+
+
+\
+
 
 
