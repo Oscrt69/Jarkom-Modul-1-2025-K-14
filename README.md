@@ -122,24 +122,24 @@ Menyimpan semua konfigurasi jaringan agar tidak hilang saat node di-restart.
 
 **`soal_5_permanen.sh` (di Node Eru)**\
 
-    #!/bin/bash
-# Script Internet Eru
-apt update
-apt install iptables -y
-
-# Enable IP forwarding
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
-# Setup NAT (kasih internet ke semua client)
-iptables -t nat -F
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.218.0.0/16
-# Allow forwarding
-iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
-iptables -A FORWARD -i eth2 -o eth0 -j ACCEPT
-
-echo nameserver 192.168.122.1 > /etc/resolv.conf
-echo "Eru internet configured!"
+   #!/bin/bash
+   # Script Internet Eru
+   apt update
+   apt install iptables -y
+   
+   # Enable IP forwarding
+   echo 1 > /proc/sys/net/ipv4/ip_forward
+   
+   # Setup NAT (kasih internet ke semua client)
+   iptables -t nat -F
+   iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.218.0.0/16
+   # Allow forwarding
+   iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+   iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+   iptables -A FORWARD -i eth2 -o eth0 -j ACCEPT
+   
+   echo nameserver 192.168.122.1 > /etc/resolv.conf
+   echo "Eru internet configured!"
    
 
 ## Soal 6: Packet Sniffing dengan Wireshark
