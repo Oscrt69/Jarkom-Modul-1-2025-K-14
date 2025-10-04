@@ -25,12 +25,7 @@ Membangun topologi jaringan dasar di GNS3 yang terdiri dari satu Router (Eru), d
 
 ### Skrip yang Digunakan
 Pengerjaan soal nomor 1 dilakukan sepenuhnya secara manual melalui antarmuka grafis GNS3, sehingga **tidak ada file skrip `.sh` yang digunakan**.
-
-### Bukti Pengerjaan (Screenshot)
-* **[➡️ Ambil Screenshot di sini]** Tampilan akhir topologi jaringan di GNS3.
-    * *Saran penamaan file: `images/soal1_topologi.png`*
-
----
+<img width="1712" height="802" alt="Screenshot 2025-09-29 194845" src="https://github.com/user-attachments/assets/fce14020-1456-4b68-9f43-b546eb8cc4be" />
 
 ## Soal 2, 3, & 4: Konfigurasi Jaringan Manual dan Konektivitas Internet
 
@@ -103,9 +98,9 @@ Konfigurasi untuk ketiga soal ini dilakukan secara manual dengan mengetikkan per
 Pengerjaan untuk soal 2, 3, dan 4 dilakukan secara manual dengan mengetikkan perintah-perintah di atas langsung di terminal setiap node, sehingga **tidak ada file skrip `.sh` yang digunakan** untuk bagian ini.
 
 ### Bukti Pengerjaan (Screenshot)
-* **[➡️ Ambil Screenshot di sini]** Tampilan terminal Melkor yang berhasil `ping` ke Varda (bukti Soal 3).
-* **[➡️ Ambil Screenshot di sini]** Tampilan terminal Melkor yang berhasil `ping` ke `8.8.8.8` (bukti Soal 4).
-    * *Saran penamaan file: `images/soal3_interkoneksi.png`, `images/soal4_koneksi_internet.png`*
+<img width="1281" height="551" alt="Screenshot 2025-10-04 230808" src="https://github.com/user-attachments/assets/645b22b9-6f3a-4151-9d16-86329f519c69" />
+
+<img width="893" height="384" alt="Screenshot 2025-10-04 230846" src="https://github.com/user-attachments/assets/44f9b2a2-e83d-421c-bd71-559e235992a4" />
 
 ---
 
