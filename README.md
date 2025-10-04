@@ -137,15 +137,14 @@ Latihan menangkap dan memfilter trafik jaringan antara Manwe dan Eru.
 
 ### Langkah-langkah Pengerjaan
 1.  Di GNS3, mulai *capture* pada koneksi antara Eru dan Switch1.
-2.  Dari **Manwe**, hasilkan trafik dengan `ping -c 5 192.18.1.1`.
+2.  Dari **Manwe**, hasilkan trafik dengan menjalankan file traffic.sh.
 3.  Di Wireshark, gunakan filter `ip.addr == 192.18.1.3`.
 
 ### Skrip yang Digunakan
 Tidak ada skrip utama, pengerjaan berfokus pada GNS3 dan Wireshark.
 
 ### Bukti Pengerjaan (Screenshot)
-* **[➡️ Ambil Screenshot di sini]** Tampilan jendela Wireshark yang sudah difilter.
-    * *Saran penamaan file: `images/soal6_wireshark_filter.png`*
+<img width="1920" height="1080" alt="Screenshot (172)" src="https://github.com/user-attachments/assets/b94d8b8c-2d28-4d54-83f2-721176adfbc7" />
 
 ---
 
@@ -162,26 +161,205 @@ Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
 
 **`soal_7.sh` (di Node Eru)**
 
-   ```bash
-   #!/bin/bash
-   apt-get update > /dev/null 2>&1 && apt-get install -y vsftpd
-   useradd -m -s /bin/bash ainur && echo "ainur:ftpaman" | chpasswd
-   useradd -m -s /bin/bash melkor && echo "melkor:ftpgagal" | chpasswd
-   cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
-   cat > /etc/vsftpd.conf << EOF
-   listen=YES
-   anonymous_enable=NO
-   local_enable=YES
-   write_enable=YES
-   chroot_local_user=YES
-   userlist_enable=YES
-   userlist_file=/etc/vsftpd.userlist
-   userlist_deny=NO
-   EOF
-   echo "ainur" > /etc/vsftpd.userlist
-   service vsftpd restart
-   echo "FTP Server Siap."
-```
+    #!/bin/bash
+    # SCRIPT NOMOR 7 - FTP SERVER
+    
+    echo "=========================================="
+    echo "   NOMOR 7: FTP SERVER SETUP"
+    echo "=========================================="
+    
+    # Cleanup
+    echo "[0/8] Cleanup..."
+    pkill vsftpd 2>/dev/null || true
+    umount /home/ainur/ftp/shared 2>/dev/null || true
+    rm -rf /home/ainur/ftp /home/melkor/ftp 2>/dev/null || true
+    
+    # Persistence script
+    cat > /root/ftp_startup.sh << 'STARTUP_SCRIPT'
+    #!/bin/bash
+    mkdir -p /home/ainur/ftp/shared
+    mount --bind /home/shared /home/ainur/ftp/shared 2>/dev/null
+    if ! pgrep vsftpd > /dev/null; then
+        /usr/sbin/vsftpd /etc/vsftpd.conf &
+    fi
+    STARTUP_SCRIPT
+    
+    chmod +x /root/ftp_startup.sh
+    
+    # Add to rc.local
+    if [ -f /etc/rc.local ]; then
+        sed -i '/ftp_startup.sh/d' /etc/rc.local
+        sed -i '/^exit 0/i /root/ftp_startup.sh' /etc/rc.local
+    else
+        echo -e '#!/bin/bash\n/root/ftp_startup.sh\nexit 0' > /etc/rc.local
+        chmod +x /etc/rc.local
+    fi
+    
+    echo "  ✓ Persistence configured"
+    
+    # Install vsftpd
+    echo "[1/8] Installing vsftpd..."
+    apt-get update > /dev/null 2>&1
+    apt-get install -y vsftpd > /dev/null 2>&1
+    echo "  ✓ vsftpd installed"
+    
+    # Create users
+    echo "[2/8] Creating users..."
+    if ! id ainur &>/dev/null; then
+        useradd -m ainur -s /bin/bash
+    fi
+    echo "ainur:password123" | chpasswd
+    
+    if ! id melkor &>/dev/null; then
+        useradd -m melkor -s /bin/bash
+    fi
+    echo "melkor:password123" | chpasswd
+    echo "  ✓ Users created"
+    
+    # Create shared folder and files
+    echo "[3/8] Creating shared folder..."
+    mkdir -p /home/shared
+    chmod 755 /home/shared
+    
+    echo "File test untuk membuktikan akses user FTP - $(date)" > /home/shared/bukti_nomor7.txt
+    
+    cat > /home/shared/kitab_penciptaan.txt << 'KITAB_FILE'
+    === KITAB PENCIPTAAN ARDA ===
+    Pada mulanya adalah Eru, Yang Satu, yang di Arda disebut Ilúvatar.
+    Dia menciptakan Ainur, Yang Suci, yang menyanyi musik penciptaan.
+    Melkor memasukkan disonansi, menciptakan kejahatan.
+    Manwë, Varda, dan Ulmo membantu pembentukan Arda.
+    === Akhir Kitab ===
+    KITAB_FILE
+    
+    echo "Test file di shared folder - $(date)" > /home/shared/test.txt
+    
+    chmod 644 /home/shared/*
+    chown root:root /home/shared/*
+    echo "  ✓ Shared folder created"
+    
+    # Setup ainur FTP structure
+    echo "[4/8] Setting up ainur FTP..."
+    mkdir -p /home/ainur/ftp/files
+    mkdir -p /home/ainur/ftp/shared
+    
+    chown nobody:nogroup /home/ainur/ftp
+    chmod 555 /home/ainur/ftp
+    
+    chown ainur:ainur /home/ainur/ftp/files
+    chmod 755 /home/ainur/ftp/files
+    
+    echo "Welcome to Ainur's FTP! Upload your files here. - $(date)" > /home/ainur/ftp/files/welcome.txt
+    echo "Sample file in files folder - $(date)" > /home/ainur/ftp/files/sample.txt
+    echo "You can upload and download files in this folder." > /home/ainur/ftp/files/readme.txt
+    
+    chown ainur:ainur /home/ainur/ftp/files/*
+    chmod 644 /home/ainur/ftp/files/*
+    
+    mount --bind /home/shared /home/ainur/ftp/shared
+    echo "  ✓ Ainur FTP structure created"
+    
+    # Setup melkor FTP structure
+    echo "[5/8] Setting up melkor FTP..."
+    mkdir -p /home/melkor/ftp
+    
+    chown nobody:nogroup /home/melkor/ftp
+    chmod 555 /home/melkor/ftp
+    
+    echo "Access restricted by Eru Iluvatar - No shared files available" > /home/melkor/ftp/.message
+    chown nobody:nogroup /home/melkor/ftp/.message
+    chmod 444 /home/melkor/ftp/.message
+    echo "  ✓ Melkor FTP structure (RESTRICTED)"
+    
+    # Configure vsftpd
+    echo "[6/8] Configuring vsftpd..."
+    [ -f /etc/vsftpd.conf ] && cp /etc/vsftpd.conf /etc/vsftpd.conf.backup
+    
+    cat > /etc/vsftpd.conf << 'VSFTPD_CONFIG'
+    listen=NO
+    listen_ipv6=YES
+    anonymous_enable=NO
+    local_enable=YES
+    write_enable=YES
+    local_umask=022
+    dirmessage_enable=YES
+    use_localtime=YES
+    xferlog_enable=YES
+    xferlog_std_format=YES
+    connect_from_port_20=YES
+    chroot_local_user=YES
+    allow_writeable_chroot=YES
+    secure_chroot_dir=/var/run/vsftpd/empty
+    pam_service_name=vsftpd
+    user_sub_token=$USER
+    local_root=/home/$USER/ftp
+    pasv_enable=YES
+    pasv_min_port=40000
+    pasv_max_port=50000
+    message_file=.message
+    VSFTPD_CONFIG
+    
+    mkdir -p /var/run/vsftpd/empty
+    chown root:root /var/run/vsftpd/empty
+    echo "  ✓ vsftpd configured"
+    
+    # Start FTP service
+    echo "[7/8] Starting FTP service..."
+    /usr/sbin/vsftpd /etc/vsftpd.conf &
+    sleep 2
+    
+    if pgrep vsftpd > /dev/null; then
+        echo "  ✓ FTP service running"
+    else
+        /usr/sbin/vsftpd /etc/vsftpd.conf &
+        sleep 1
+    fi
+    
+    # Verification
+    echo "[8/8] Verification..."
+    echo ""
+    echo "FTP Users:"
+    id ainur | grep uid
+    id melkor | grep uid
+    
+    echo ""
+    echo "Shared files:"
+    ls -lh /home/shared/
+    
+    echo ""
+    echo "Ainur files folder:"
+    ls -lh /home/ainur/ftp/files/
+    
+    echo ""
+    echo "FTP Service:"
+    if pgrep vsftpd > /dev/null; then
+        echo "  ✓ vsftpd running (PID: $(pgrep vsftpd))"
+    else
+        echo "  ✗ vsftpd NOT running"
+    fi
+    
+    # Summary
+    echo ""
+    echo "=========================================="
+    echo "   NOMOR 7 SETUP COMPLETED!"
+    echo "=========================================="
+    echo ""
+    echo "FTP Server: 192.218.2.1"
+    echo ""
+    echo "User 1: ainur / password123"
+    echo "  - /files (read/write)"
+    echo "  - /shared (read/write)"
+    echo ""
+    echo "User 2: melkor / password123"
+    echo "  - RESTRICTED (no shared access)"
+    echo ""
+    echo "Ready for testing!"
+    echo "=========================================="
+
+lalu jalanin ftp nya di melkor
+
+<img width="847" height="626" alt="Screenshot 2025-10-04 231457" src="https://github.com/user-attachments/assets/d6c5d1ed-963f-4156-8760-55e40106f445" />
+
 
 ### Soal 8: Analisis Upload FTP
 ## Tujuan
@@ -210,11 +388,11 @@ Bash
 
 
 Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Screenshot Wireshark yang menyorot paket Request: STOR ramalan.txt.
 
-Saran penamaan file: images/soal8_wireshark_stor.png
+<img width="1920" height="1080" alt="Screenshot (173)" src="https://github.com/user-attachments/assets/7c3cd4b4-ed8c-4064-9584-de175a94094f" />
 
-Soal 9: Analisis Download FTP & Read-Only
+
+## Soal 9: Analisis Download FTP & Read-Only
 Tujuan
 Mengubah hak akses menjadi read-only dan menganalisis proses download (RETR).
 
@@ -228,22 +406,53 @@ Dari Manwe, jalankan ftp 192.18.1.1, login sebagai ainur, lalu get kitab.txt. Co
 Hentikan capture dan cari paket RETR di Wireshark.
 
 Skrip yang Digunakan
+
 soal_9.sh (di Node Eru)
 
-Bash
-
-#!/bin/bash
-echo "=== Konfigurasi Read-Only FTP (Soal 9) ==="
-sed -i 's/write_enable=YES/write_enable=NO/' /etc/vsftpd.conf
-service vsftpd restart
-echo "isi kitab" > /home/ainur/kitab.txt
-echo "--> Konfigurasi read-only aktif."
+    #!/bin/bash
+    # Script Nomor 9 - Setup FTP Read-Only di Eru
+    
+    echo "=== NOMOR 9: FTP READ-ONLY SETUP ==="
+    
+    # Copy file kitab ke FTP directory
+    echo "Copying kitab_penciptaan.txt to FTP directory..."
+    cp kitab_penciptaan.txt /home/ainur/ftp/files/
+    chown ainur:ainur /home/ainur/ftp/files/kitab_penciptaan.txt
+    chmod 644 /home/ainur/ftp/files/kitab_penciptaan.txt
+    
+    # Backup original config
+    cp /etc/vsftpd.conf /etc/vsftpd.conf.backup
+    
+    # Modify config untuk READ-ONLY
+    echo "Setting FTP server to READ-ONLY mode..."
+    sed -i 's/write_enable=YES/write_enable=NO/' /etc/vsftpd.conf
+    
+    # Verify config change
+    echo "Current write_enable setting:"
+    grep "write_enable" /etc/vsftpd.conf
+    
+    # Restart FTP server
+    echo "Restarting FTP server..."
+    pkill vsftpd
+    sleep 2
+    /usr/sbin/vsftpd /etc/vsftpd.conf &
+    
+    # Verify FTP server running
+    echo "FTP Server status:"
+    pgrep vsftpd && echo "FTP Server is running" || echo "FTP Server failed to start"
+    
+    # List files in FTP directory
+    echo "Files available for download:"
+    ls -la /home/ainur/ftp/files/
+    
+    echo "=== ERU SETUP COMPLETE - FTP SERVER IS READ-ONLY ==="
+    
 Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Screenshot terminal Manwe yang menunjukkan get berhasil dan put gagal.
+<img width="1438" height="359" alt="Screenshot 2025-10-04 232439" src="https://github.com/user-attachments/assets/47a4eb6f-3a71-4f20-8d6d-5f8bb65c8fed" />
 
-[➡️ Ambil Screenshot di sini] Screenshot Wireshark yang menyorot paket Request: RETR kitab.txt.
 
-Saran penamaan file: images/soal9_test_akses.png, images/soal9_wireshark_retr.png
+<img width="1920" height="1080" alt="Screenshot (174)" src="https://github.com/user-attachments/assets/b0a18921-07c7-4f0c-a341-764f7c2ff3ac" />
+
 
 Soal 10: Simulasi Serangan Ping Flood
 Tujuan
@@ -257,18 +466,14 @@ Tunggu hingga selesai dan amati blok statistik di akhir output.
 Skrip yang Digunakan
 soal_10.sh (di Node Melkor)
 
-Bash
+    #!/bin/bash
+    echo "=== Memulai Ping Flood (Soal 10) ==="
+    ping -c 100 192.18.1.1
+    echo "=== Ping Flood Selesai ==="
 
-#!/bin/bash
-echo "=== Memulai Ping Flood (Soal 10) ==="
-ping -c 100 192.18.1.1
-echo "=== Ping Flood Selesai ==="
-Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Screenshot blok statistik di akhir output ping.
+Tidak ada paket yang loss untuk nomor 10 ini dan tidak mempengaruhi kinerja eru
 
-Saran penamaan file: images/soal10_ping_statistik.png
-
-Soal 11: Membuktikan Kelemahan Telnet
+## Soal 11: Membuktikan Kelemahan Telnet
 Tujuan
 Mendemonstrasikan bahwa Telnet tidak aman dengan menangkap kredensial login.
 
@@ -284,24 +489,40 @@ Analisis di Wireshark menggunakan "Follow TCP Stream".
 Skrip yang Digunakan
 soal_11.sh (di Node Melkor)
 
-Bash
+    #!/bin/bash
+    echo "=== Memulai Setup Telnet dengan Metode Alternatif (xinetd) - VERSI PERBAIKAN ==="
+    apt-get update > /dev/null 2>&1
+    echo "[1/4] Menginstal xinetd dan telnetd..."
+    apt-get purge -y inetutils-inetd > /dev/null 2>&1
+    apt-get install -y xinetd telnetd
+    echo "[2/4] Membuat file konfigurasi /etc/xinetd.d/telnet..."
+    cat > /etc/xinetd.d/telnet << EOF
+    service telnet
+    {
+        disable         = no
+        flags           = REUSE
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/sbin/telnetd
+        log_on_failure  += USERID
+    }
+    EOF
+    echo "[3/4] Membuat user 'eru_login' dengan shell yang benar..."
+    USERNAME="eru_login"
+    PASSWORD="password_terlihat_jelas"
+    if id "$USERNAME" &>/dev/null; then userdel -r "$USERNAME"; fi
+    # --- PERBAIKAN DI SINI: dari /bash menjadi /bin/bash ---
+    useradd -m -d /home/$USERNAME -s /bin/bash "$USERNAME"
+    echo "$USERNAME:$PASSWORD" | chpasswd
+    echo "[4/4] Merestart layanan xinetd..."
+    service xinetd restart
+    echo ""
+    echo "=== Setup Selesai. Server Telnet Siap ==="
 
-#!/bin/bash
-echo "=== Persiapan Server Telnet (Soal 11) ==="
-apt-get update > /dev/null 2>&1 && apt-get install -y inetutils-inetd telnetd
-sed -i 's/^#<off># telnet.*/telnet\tstream\ttcp\tnowait\troot\t/usr/sbin/tcpd\t/usr/sbin/telnetd/' /etc/inetd.conf
-USERNAME="eru_login"
-if id "$USERNAME" &>/dev/null; then userdel -r "$USERNAME"; fi
-useradd -m -d /home/$USERNAME -s /bin/bash "$USERNAME"
-echo "eru_login:password_terlihat_jelas" | chpasswd
-killall inetutils-inetd > /dev/null 2>&1
-# Menggunakan nama biner yang benar yang kita temukan saat troubleshooting
-/usr/sbin/inetutils-inetd
-echo "--> Server Telnet Siap."
-Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Screenshot jendela "Follow TCP Stream" di Wireshark yang menunjukkan username dan password.
 
-Saran penamaan file: images/soal11_telnet_plaintext.png
+<img width="1920" height="1080" alt="Screenshot (176)" src="https://github.com/user-attachments/assets/2f6ffe20-3c4a-4964-99ec-1b8493a514a8" />
+
 
 Soal 12: Pemindaian Port dengan Netcat
 Tujuan
@@ -315,59 +536,84 @@ Dari Eru, jalankan tiga perintah nc -zv 192.18.1.2 <port> untuk setiap port (21,
 Skrip yang Digunakan
 soal_12.sh (di Node Melkor)
 
-Bash
+    #!/bin/bash
+    echo "=== Memulai Skrip Persiapan Port Scan ==="
+    echo "[1/3] Membersihkan proses 'nc' yang mungkin sudah berjalan..."
+    killall nc > /dev/null 2>&1
+    echo "--> Selesai."
+    echo "[2/3] Menjalankan listener di port 21 (background)..."
+    nc -l -p 21 &
+    echo "[3/3] Menjalankan listener di port 80 (background)..."
+    nc -l -p 80 &
+    sleep 1
+    echo ""
+    echo "=== Verifikasi Proses yang Berjalan ==="
+    ps aux | grep "[n]c -l"
+    echo ""
+    echo "Skrip selesai. Node Melkor sekarang siap untuk dipindai dari Eru."
+    echo "Pastikan Anda melihat dua proses 'nc' di atas."
 
-#!/bin/bash
-echo "=== Menjalankan Listener Netcat (Soal 12) ==="
-killall nc > /dev/null 2>&1
-apt-get update > /dev/null 2>&1 && apt-get install -y netcat-traditional
-nc -l -p 21 &
-nc -l -p 80 &
-echo "--> Listener di port 21 dan 80 aktif."
-Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Screenshot terminal Eru yang menunjukkan hasil dari ketiga perintah scan nc.
 
-Saran penamaan file: images/soal12_hasil_scan.png
+<img width="696" height="219" alt="Screenshot 2025-10-04 235107" src="https://github.com/user-attachments/assets/0f48c522-241b-4a97-a7f8-bd7d30afb33e" />
 
-Soal 13: Mendemonstrasikan Keamanan SSH
-Tujuan
-Menunjukkan bahwa SSH aman dengan menganalisis sesi login yang terenkripsi.
+
+## Soal 13: SSH (Secure Shell) Connection Analysis
+# Tujuan
+Membuktikan bahwa SSH mengenkripsi data (username, password, command) sehingga tidak dapat dibaca di Wireshark, berbeda dengan Telnet yang mengirim plain text.
 
 Langkah-langkah Pengerjaan
-Jalankan skrip soal_13_server.sh di Eru, lalu atur password root dengan passwd.
+1. Setup SSH Server di Node Eru
+Jalankan skrip setup_ssh_eru.sh di Eru.
+2. Koneksi SSH dengan Wireshark
 
-Jalankan skrip soal_13_client.sh di Varda.
+Buka Wireshark di interface Varda-Eru → Start Capturing
+Dari Varda, jalankan: ssh root@192.218.2.1
+Login dengan password: password123
+Jalankan beberapa command (whoami, hostname, exit)
+Stop Wireshark → Apply filter: ssh.encrypted_packet
+Save capture: ssh_varda_eru.pcapng
 
-Mulai capture pada koneksi Varda-Eru.
-
-Dari Varda, jalankan ssh root@192.18.2.1 dan login.
-
-Analisis paket SSH di Wireshark untuk menunjukkan data terenkripsi.
+3. Screenshot Bukti
+Ambil screenshot Wireshark yang menampilkan Encrypted Packet dengan detail SSH Protocol terlihat.
 
 Skrip yang Digunakan
-soal_13_server.sh (di Node Eru)
+setup_ssh_eru.sh (di Node Eru)
 
-Bash
+    bash#!/bin/bash
+    echo "=== Setup SSH Server di Node Eru ==="
+    echo "[1/5] Update dan install OpenSSH Server..."
+    apt-get update > /dev/null 2>&1
+    apt-get install openssh-server -y > /dev/null 2>&1
+    echo "--> Selesai."
+    echo "[2/5] Generate SSH host keys..."
+    ssh-keygen -A > /dev/null 2>&1
+    mkdir -p /var/run/sshd
+    echo "--> Selesai."
+    echo "[3/5] Konfigurasi SSH..."
+    cat > /etc/ssh/sshd_config << EOF
+    Port 22
+    ListenAddress 0.0.0.0
+    PermitRootLogin yes
+    PasswordAuthentication yes
+    EOF
+    echo "--> Selesai."
+    echo "[4/5] Set password root..."
+    echo "root:password123" | chpasswd
+    echo "--> Selesai."
+    echo "[5/5] Start SSH service..."
+    /usr/sbin/sshd
+    sleep 1
+    echo "--> Selesai."
+    echo ""
+    echo "=== Verifikasi SSH Server ==="
+    ps aux | grep "[s]shd"
+    netstat -tlnp | grep :22
+    echo ""
+    echo "SSH Server siap di 192.218.2.1:22"
+    echo "Username: root | Password: password123"
 
-#!/bin/bash
-echo "=== Konfigurasi Server SSH di Eru (Soal 13) ==="
-apt-get update > /dev/null 2>&1 && apt-get install -y openssh-server
-sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-service ssh restart
-echo "--> Server SSH Siap. Jalankan 'passwd' untuk set password root."
-soal_13_client.sh (di Node Varda)
 
-Bash
-
-#!/bin/bash
-echo "=== Konfigurasi Client SSH di Varda (Soal 13) ==="
-apt-get update > /dev/null 2>&1 && apt-get install -y openssh-client
-# IP Address sudah diatur oleh langkah-langkah manual di soal 3
-echo "--> Client SSH Siap."
-Bukti Pengerjaan (Screenshot)
-[➡️ Ambil Screenshot di sini] Jendela Wireshark yang menampilkan detail paket SSH dan menunjukkan bagian "Encrypted Data".
-
-Saran penamaan file: images/soal13_ssh_encrypted.png
+<img width="1920" height="1080" alt="Screenshot (177)" src="https://github.com/user-attachments/assets/4be4dd6f-0824-45bf-8517-cdb5d3a9346f" />
 
 
 ### Soal 14
