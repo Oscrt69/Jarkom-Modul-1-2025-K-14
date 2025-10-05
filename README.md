@@ -356,7 +356,7 @@ Memasang FTP server di Eru dengan hak akses berbeda untuk `ainur` dan `melkor`.
     echo "Ready for testing!"
     echo "=========================================="
 
-lalu jalanin ftp nya di melkor
+lalu jalanin ftp nya di melkor dengan ketentuan yang ada di soal
 
 <img width="847" height="626" alt="Screenshot 2025-10-04 231457" src="https://github.com/user-attachments/assets/d6c5d1ed-963f-4156-8760-55e40106f445" />
 
@@ -378,16 +378,12 @@ Hentikan capture dan cari paket STOR di Wireshark.
 
 soal_8.sh (di Node Ulmo)
 
-Bash
+       #!/bin/bash
+       echo "=== Persiapan Ulmo (Soal 8) ==="
+       apt-get update > /dev/null 2>&1 && apt-get install -y ftp
+       echo "data cuaca untuk Eru" > /root/ramalan.txt
+       echo "--> Siap untuk upload. Jalankan 'ftp 192.18.2.1'"
 
-   #!/bin/bash
-   echo "=== Persiapan Ulmo (Soal 8) ==="
-   apt-get update > /dev/null 2>&1 && apt-get install -y ftp
-   echo "data cuaca untuk Eru" > /root/ramalan.txt
-   echo "--> Siap untuk upload. Jalankan 'ftp 192.18.2.1'"
-
-
-Bukti Pengerjaan (Screenshot)
 
 <img width="1920" height="1080" alt="Screenshot (173)" src="https://github.com/user-attachments/assets/7c3cd4b4-ed8c-4064-9584-de175a94094f" />
 
