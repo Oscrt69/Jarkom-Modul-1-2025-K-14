@@ -519,8 +519,31 @@ soal_11.sh (di Node Melkor)
 
 <img width="1920" height="1080" alt="Screenshot (176)" src="https://github.com/user-attachments/assets/2f6ffe20-3c4a-4964-99ec-1b8493a514a8" />
 
+Setelah menjalankannya lalu lakukan langkah2 sebagai berikut :
+1. Koneksi Telnet dari Eru ke Melkor
+bashtelnet 192.218.1.2
+Login:
 
-Soal 12: Pemindaian Port dengan Netcat
+Username: eruadmin
+Password: telnetpass123
+
+Jalankan beberapa command:
+bashwhoami
+pwd
+ls
+exit
+
+2. Stop Wireshark dan Analisis
+Apply display filter:
+telnet
+Follow TCP Stream:
+
+Klik kanan pada packet telnet
+Follow → TCP Stream
+Username dan password terlihat jelas sebagai plain text
+
+
+## Soal 12: Pemindaian Port dengan Netcat
 Tujuan
 Latihan memindai port dengan nc untuk memeriksa status port 21, 80 (terbuka) dan 666 (tertutup).
 
