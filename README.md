@@ -515,9 +515,7 @@ soal_11.sh (di Node Melkor)
     service xinetd restart
     echo ""
     echo "=== Setup Selesai. Server Telnet Siap ==="
-
-
-<img width="1920" height="1080" alt="Screenshot (176)" src="https://github.com/user-attachments/assets/2f6ffe20-3c4a-4964-99ec-1b8493a514a8" />
+    
 
 Setelah menjalankannya lalu lakukan langkah2 sebagai berikut :
 1. Koneksi Telnet dari Eru ke Melkor
@@ -542,6 +540,7 @@ Klik kanan pada packet telnet
 Follow → TCP Stream
 Username dan password terlihat jelas sebagai plain text
 
+<img width="1920" height="1080" alt="Screenshot (176)" src="https://github.com/user-attachments/assets/2f6ffe20-3c4a-4964-99ec-1b8493a514a8" />
 
 ## Soal 12: Pemindaian Port dengan Netcat
 Tujuan
