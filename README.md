@@ -955,78 +955,58 @@ KOMJAR25{M4ster_4n4lyzer_1xcg3WUUjKpux80gm8tEdFgL0}
 
 ```
 
-### Soal 18
+## Soal 18: Deteksi File Malware via SMB Protocol
+Tujuan
+Mengidentifikasi file berbahaya yang ditransfer melalui protokol SMB dengan metode yang berbeda dari soal sebelumnya (HTTP).
 
-```
-nc 10.15.43.32 3405
-```
+Langkah-langkah Pengerjaan
+1. Download File Capture
 
-### Sub-soal 1
+bashnc 10.15.43.32 3405 > soal18.pcap
+3. Buka dengan Wireshark
 
-How many files are suspected of containing malware? Format: int
+wireshark soal18.pcap
 
-1. File > Export Objects > SMB
+4. Export SMB Objects
+PENTING: Soal ini menggunakan protokol SMB, bukan HTTP!
 
-### Jawaban
+Menu: File → Export Objects → SMB/SMB2
 
-```
-2
-```
+Window "SMB object list" akan terbuka menampilkan file yang ditransfer
+5. lalu filter dengan .exe
 
-### Sub-soal 2
+6. Identifikasi File Malware
+   
+Dari SMB object list, terlihat 2 file .exe:
+File 1 (Malware Pertama):
 
-What is the name of the first malicious file? Format: file.exe
+Size: 712 kB
+Filename: d0p2nc6ka3f_fixhohlyc j4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
 
-### Jawaban
+File 2 (Malware Kedua):
 
-```
-d0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
-```
+Size: 115 kB
+Filename: oiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyhH6l8n_di.exe
 
-### Sub-soal 3
+8. Jawab Challenge
+bashnc 10.15.43.32 3405
+Pertanyaan 1: How many files are suspected of containing malware?
+> 2
+Pertanyaan 2: What is the name of the first malicious file?
 
-Apa nama file berbahaya yang kedua? Format: file.exe
+> d0p2nc6ka3f_fixhohlyc j4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
+Pertanyaan 3: What is the hash of the first malicious file?
 
-### Jawaban
+> 59896ae5f3edcb999243c7bfdc0b17eb7fe28f3a66259d797386ea470c010040
+Pertanyaan 4: What is the hash of the second malicious file?
 
-```
-d0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
-```
+> cf99990bee6c378cbf56239b3cc88276eec348d82740f84e9d5c343751f82560
 
-### Sub-soal 4
+Flag: KOMJAR25{Y0u_4re_g0d1lke_YXy69mpWg42RMOralWIzMD9fZS}
 
-What is the hash of the first malicious file? Format: sha256
+<img width="1920" height="1080" alt="Screenshot (181)" src="https://github.com/user-attachments/assets/0cd842ab-a608-4678-ae07-942a8b3cd8b3" />
 
-1.
-```
-sha256sum %5cWINDOWS%5cd0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
-```
-### Jawaban
-
-```
-59896ae5f3edcb999243c7bfdc0b17eb7fe28f3a66259d797386ea470c010040
-```
-
-### Sub-soal 5
-
-What is the hash of the second malicious file? Format: sha256
-
-1. 
-```
-sha256 %5cWINDOWS%5coiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyh46l8n_di.exe
-```
-
-### Jawaban
-
-```
-cf99990bee6c378cbf56239b3cc88276eec348d82740f84e9d5c343751f82560
-```
-
-Flag
-
-```
-KOMJAR25{Y0u_4re_g0dl1ke_e8XQLgCWiRzzsqZm9XqENF6bY}
-```
+<img width="1223" height="444" alt="Screenshot 2025-10-05 021911" src="https://github.com/user-attachments/assets/4776d15c-2548-47f5-a5b6-74d40535f553" />
 
 ### Soal 19
 
@@ -1135,14 +1115,66 @@ Flag
 KOMJAR25{B3ware_0f_M4lw4re_Q1lBjLY0oJ3rCllqfcUS8GO4a}
 ```
 
+## Soal 20: Deteksi Malware Terenkripsi dengan TLS Decryption
+Tujuan
+Mengidentifikasi file berbahaya yang disembunyikan dengan enkripsi TLS menggunakan bantuan keylog file dari Manwë untuk mendekripsi traffic.
 
+Langkah-langkah Pengerjaan
+1. Download File Capture
+bashnc 10.15.43.32 3407 > soal20.pcap
+2. Download Keylog File (Bantuan Manwë)
+Manwë memberikan bantuan berupa TLS keylog file untuk mendekripsi traffic. File ini bernama:
 
+keylogfile.txt 
 
+Download atau extract keylog file dari challenge.
+3. Load Keylog File ke Wireshark
+Cara 1: Via Preferences
 
+Buka Wireshark
+Edit → Preferences
+Expand Protocols → TLS (atau SSL di Wireshark versi lama)
+Di field (Pre)-Master-Secret log filename, browse ke file keylog
+Klik OK
 
+4. Buka File Capture
+bashwireshark soal20.pcap
+Setelah keylog di-load, traffic TLS akan otomatis ter-decrypt dan muncul sebagai HTTP biasa.
+5. Export HTTP Objects
 
+Menu: File → Export Objects → HTTP
+Sekarang file yang sebelumnya terenkripsi akan terlihat
 
-\
+File yang ditemukan:
+
+Filename: invest_20.dll
+Content Type: application/octet-stream
+
+6. Identifikasi Metode Enkripsi
+Dari packet TLS sebelum didekripsi:
+
+Klik packet TLS Handshake
+Expand Transport Layer Security → Handshake Protocol
+Lihat cipher suite yang digunakan
+
+Metode enkripsi: TLS
+7. Hash File Malware
+Export file invest_20.dll lalu hitung hash:
+bash# Linux
+sha256sum invest_20.dll
+
+Windows PowerShell
+Get-FileHash invest_20.dll -Algorithm SHA256
+Hash: 31cf42b2a7c5c558f44cfc67684cc344c17d49d3a1e0b2cecb8eb58173cb2f
+8. Jawab Challenge
+bashnc 10.15.43.32 3407
+> TLS
+> invest_20.dll
+> 31cf42b2a7c5c558f44cfc67684cc344c17d49d3a1e0b2cecb8eb58173cb2f
+Flag: KOMJAR25{B3ware_0f_M4lw4re_VDVGw0SO41hokPcl4mIqJGUef}
+
+<img width="1059" height="432" alt="Screenshot 2025-10-05 083258" src="https://github.com/user-attachments/assets/75a425e2-6f67-4d05-824c-4fd087cf529a" />
+<img width="1920" height="1080" alt="Screenshot (183)" src="https://github.com/user-attachments/assets/cca40e30-1770-4638-a81f-7f64d8801892" />
 
 
 
